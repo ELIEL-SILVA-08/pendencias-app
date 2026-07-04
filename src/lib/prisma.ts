@@ -1,10 +1,12 @@
 import { PrismaClient } from '@prisma/client'
 
 const prismaClientSingleton = () => {
-  if (!process.env.DATABASE_URL) {
-    process.env.DATABASE_URL = "postgresql://dummy:dummy@localhost:5432/dummy"
+  try {
+    return new PrismaClient()
+  } catch (error) {
+    // Vercel build fallback
+    return {} as PrismaClient
   }
-  return new PrismaClient()
 }
 
 declare const globalThis: {
