@@ -1,0 +1,57 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model clientes {
+  id            BigInt          @id @default(autoincrement())
+  schema_nome   String          @unique @db.VarChar(100)
+  subdominio    String          @unique @db.VarChar(100)
+  municipio     String?         @db.VarChar(150)
+  estado        String?         @db.VarChar(2)
+  estado_nome   String?         @db.VarChar(100)
+  cnpj          String?         @db.VarChar(20)
+  endereco      String?         @db.VarChar(300)
+  ativo         Boolean         @default(true)
+  vencimento    DateTime?       @db.Timestamp(6)
+  dias_carencia Int             @default(7)
+  status_acesso String          @default("ATIVO") @db.VarChar(50)
+  criado_em     DateTime        @default(now()) @db.Timestamp(6)
+  atualizado_em DateTime        @default(now()) @db.Timestamp(6)
+  config_visual config_visual[]
+}
+
+model config_visual {
+  id                 BigInt   @id @default(autoincrement())
+  cliente_id         BigInt
+  cor_primaria       String   @default("#19347a") @db.VarChar(50)
+  cor_secundaria     String   @default("#23923c") @db.VarChar(50)
+  cor_perigo         String   @default("#c3241d") @db.VarChar(50)
+  cor_aviso          String   @default("#f5c229") @db.VarChar(50)
+  logo_url           String?  @db.VarChar(500)
+  logo_relatorio_url String?  @db.VarChar(500)
+  favicon_url        String?  @db.VarChar(500)
+  nome_sistema       String   @default("SEMED Digital") @db.VarChar(200)
+  nome_prefeitura    String?  @db.VarChar(300)
+  rodape_relatorio   String?
+  logo_ajustes       String?
+  criado_em          DateTime @default(now()) @db.Timestamp(6)
+  atualizado_em      DateTime @default(now()) @db.Timestamp(6)
+  clientes           clientes @relation(fields: [cliente_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+}
+
+model BacklogTask {
+  id          String   @id @default(uuid())
+  titulo      String
+  descricao   String?  @db.Text
+  status      String   @default("PENDENTE")
+  urgencia    String   @default("MEDIA")
+  desenvolvedor String?
+  criadoEm    DateTime @default(now())
+  atualizadoEm DateTime @updatedAt
+
+  @@map("backlog_tasks")
+}
