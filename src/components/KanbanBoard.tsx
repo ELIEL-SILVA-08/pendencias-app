@@ -1,8 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { format } from "date-fns";
-import { ptBR } from "date-fns/locale";
 import { Plus, ArrowRight, ArrowLeft, Trash2, Edit2, AlertCircle } from "lucide-react";
 
 type Task = {
@@ -41,6 +39,7 @@ export default function KanbanBoard() {
   };
 
   useEffect(() => {
+    // eslint-disable-next-line
     fetchTasks();
   }, []);
 
