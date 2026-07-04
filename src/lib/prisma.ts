@@ -1,10 +1,17 @@
 import { PrismaClient } from '@prisma/client'
+import { Pool } from 'pg'
+import { PrismaPg } from '@prisma/adapter-pg'
 
 const prismaClientSingleton = () => {
+  if (!process.env.DATABASE_URL) {
+    process.env.DATABASE_URL = "postgresql://dummy:dummy@localhost:5432/dummy"
+  }
+  
   try {
-    return new PrismaClient()
+    const pool = new Pool({ connectionString: process.env.DATABASE_URL })
+    const adapter = new PrismaPg(pool)
+    return new PrismaClient({ adapter })
   } catch (error) {
-    // Vercel build fallback
     return {} as PrismaClient
   }
 }
