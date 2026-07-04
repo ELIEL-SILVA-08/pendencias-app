@@ -10,7 +10,7 @@ export async function GET() {
     return NextResponse.json(tasks);
   } catch (error) {
     console.error(error);
-    return NextResponse.json({ error: 'Erro ao buscar tarefas' }, { status: 500 });
+    return NextResponse.json({ error: String(error) }, { status: 500 });
   }
 }
 
